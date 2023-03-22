@@ -42,6 +42,7 @@ class PostService
     public function bulk(Post $post, array $tagsIdArray){
         DB::beginTransaction();
 
+        $post->tags()->detach();
         foreach ($tagsIdArray as $item){
             $tag = Tag::where('id',$item)->firstOrFail();
             $post->tags()->save($tag);

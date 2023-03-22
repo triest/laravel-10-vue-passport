@@ -22,7 +22,7 @@ class CreateTagRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title'  => 'required|string|max:256',
+            'title'  => 'required|string|max:256|unique:tags|max:255',
         ];
     }
 }
