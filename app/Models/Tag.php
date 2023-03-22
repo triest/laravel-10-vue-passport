@@ -6,15 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
-class Post extends Model
+class Tag extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title','description'];
-
-
-    public function tags(): MorphToMany
+    public function posts(): MorphToMany
     {
-        return $this->morphToMany(Tag::class, 'taggable');
+        return $this->morphedByMany(Post::class, 'taggable');
     }
 }

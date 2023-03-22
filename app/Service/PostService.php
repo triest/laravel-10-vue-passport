@@ -3,12 +3,15 @@
 namespace App\Service;
 
 use App\Models\Post;
+use App\Models\Tag;
+use Illuminate\Support\Facades\DB;
 
 class PostService
 {
 
     public function index(){
-
+        $posts = Post::all();
+        return $posts;
     }
 
 
@@ -34,5 +37,23 @@ class PostService
     public function delete(Post $post){
 
         $post->delete();
+    }
+
+    public function bulk(Post $post, array $tagsIdArray){
+        DB::beginTransaction();
+
+        foreach ($tagsIdArray as $item){
+            $tag = Tag::where('id',$item)->firstOrFail();
+            $post->tags()->save($tag);
+        }
+
+        foreach ( $post->tags()->get() as $item){
+            if(!in_array($item->id,$tagsIdArray)){
+                $post->tags()->detach($item);
+            }
+        }
+
+        DB::commit();
+        return $post->tags()->get();
     }
 }
